@@ -64,17 +64,17 @@ class InnoDBPreprocessor(Preprocessor):
             if chunk != 'INDIVIDUAL BUFFER POOL INFO':
                 for line in chunks[chunk]:
                     self.process_line(line)
-
-        # Process the individual buffer pool
-        bufferpool = 'bufferpool_0.'
-        for line in chunks['INDIVIDUAL BUFFER POOL INFO']:
-            # Buffer pool stats are preceded by:
-            # ---BUFFER POOL X
-            if line.startswith('---'):
-                innorow = self._INNO_LINE.split(line)
-                bufferpool = 'bufferpool_' + innorow[2] + '.'
             else:
-                self.process_individual_bufferpools(line, bufferpool)
+        # Process the individual buffer pool
+                bufferpool = 'bufferpool_0.'
+                for line in chunks['INDIVIDUAL BUFFER POOL INFO']:
+                # Buffer pool stats are preceded by:
+                # ---BUFFER POOL X
+                if line.startswith('---'):
+                    innorow = self._INNO_LINE.split(line)
+                    bufferpool = 'bufferpool_' + innorow[2] + '.'
+                else:
+                    self.process_individual_bufferpools(line, bufferpool)
 
         return self.tmp_stats.items()
 
